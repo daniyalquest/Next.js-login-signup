@@ -2,24 +2,25 @@ import { put, getDownloadUrl } from "@vercel/blob";
 import bcrypt from "bcryptjs";
 import { encode, decode } from "@msgpack/msgpack";
 
-// Helper to read users from blob storage
+const FILE_NAME = "users.bin";
+
 const readUsers = async () => {
   try {
-    const { url } = await getDownloadUrl("users.bin");
+    const url = await getDownloadUrl(FILE_NAME);
     if (!url) return [];
     const res = await fetch(url);
     if (!res.ok) return [];
-    const buffer = Buffer.from(await res.arrayBuffer());
+    const buffer = new Uint8Array(await res.arrayBuffer());
     return buffer.length ? decode(buffer) : [];
-  } catch {
+  } catch (err) {
+    console.error("readUsers error:", err);
     return [];
   }
 };
 
-// Helper to write users to blob storage
 const writeUsers = async (users) => {
-  const buffer = encode(users);
-  await put("users.bin", Buffer.from(buffer), { access: "private" });
+  const buffer = encode(users); // already Uint8Array
+  await put(FILE_NAME, buffer, { access: "private" });
 };
 
 // POST handler
