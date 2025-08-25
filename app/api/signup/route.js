@@ -19,7 +19,7 @@ const readUsers = async () => {
 
 const writeUsers = async (users) => {
   const buffer = encode(users); // already Uint8Array
-  await put(BLOB_URL, buffer, { access: "public" });
+  await put(FILE_NAME, buffer, { access: "public" }); // <-- FIXED
 };
 
 // POST handler
