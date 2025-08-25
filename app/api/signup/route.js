@@ -20,7 +20,7 @@ const readUsers = async () => {
 
 const writeUsers = async (users) => {
   const buffer = encode(users); // already Uint8Array
-  await put(FILE_NAME, buffer, { access: "private" });
+  await put(FILE_NAME, buffer, { access: "public" });
 };
 
 // POST handler

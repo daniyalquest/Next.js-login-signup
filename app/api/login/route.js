@@ -23,7 +23,7 @@ const readUsers = async () => {
 
 // Save users to blob storage
 const saveUsers = async (binaryData) => {
-  await put(FILE_NAME, Buffer.from(binaryData), { access: "private" });
+  await put(FILE_NAME, Buffer.from(binaryData), { access: "public" });
 };
 
 export async function POST(req) {
