@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { decode } from "@msgpack/msgpack";
-import { put } from "@vercel/blob";
 import { getDownloadUrl } from "@vercel/blob";
 
 const SECRET = process.env.SECRET;
@@ -19,11 +18,6 @@ const readUsers = async () => {
   } catch {
     return [];
   }
-};
-
-// Save users to blob storage
-const saveUsers = async (binaryData) => {
-  await put(FILE_NAME, Buffer.from(binaryData), { access: "public" });
 };
 
 export async function POST(req) {
