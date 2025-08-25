@@ -9,13 +9,14 @@ const FILE_NAME = "users.bin";
 // Read users from blob storage using getDownloadUrl
 const readUsers = async () => {
   try {
-    const url = await getDownloadUrl(FILE_NAME);
+    const { url } = await getDownloadUrl(FILE_NAME); // <-- CORRECT destructure
     if (!url) return [];
     const res = await fetch(url);
     if (!res.ok) return [];
     const arrayBuffer = await res.arrayBuffer();
     return arrayBuffer.byteLength ? decode(new Uint8Array(arrayBuffer)) : [];
-  } catch {
+  } catch (err) {
+    console.error("readUsers error:", err);
     return [];
   }
 };
