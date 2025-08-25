@@ -6,7 +6,7 @@ const FILE_NAME = "users.bin";
 
 const readUsers = async () => {
   try {
-    const url = await getDownloadUrl(FILE_NAME);
+    const { url } = await getDownloadUrl(FILE_NAME); // <-- destructure url
     if (!url) return [];
     const res = await fetch(url);
     if (!res.ok) return [];

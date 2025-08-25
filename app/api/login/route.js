@@ -9,7 +9,7 @@ const FILE_NAME = "users.bin";
 // Read users from blob storage using getDownloadUrl
 const readUsers = async () => {
   try {
-    const { url } = await getDownloadUrl(FILE_NAME);
+    const url = await getDownloadUrl(FILE_NAME);
     if (!url) return [];
     const res = await fetch(url);
     if (!res.ok) return [];
