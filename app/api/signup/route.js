@@ -1,14 +1,13 @@
-import { put, getDownloadUrl } from "@vercel/blob";
+import { put } from "@vercel/blob";
 import bcrypt from "bcryptjs";
 import { encode, decode } from "@msgpack/msgpack";
 
 const FILE_NAME = "users.bin";
+const BLOB_URL = "https://4m0cie5i8sy7hf53.public.blob.vercel-storage.com/users.bin";
 
 const readUsers = async () => {
   try {
-    const { url } = await getDownloadUrl(FILE_NAME); // <-- destructure url
-    if (!url) return [];
-    const res = await fetch(url);
+    const res = await fetch(BLOB_URL);
     if (!res.ok) return [];
     const buffer = new Uint8Array(await res.arrayBuffer());
     return buffer.length ? decode(buffer) : [];
@@ -20,7 +19,7 @@ const readUsers = async () => {
 
 const writeUsers = async (users) => {
   const buffer = encode(users); // already Uint8Array
-  await put(FILE_NAME, buffer, { access: "public" });
+  await put(BLOB_URL, buffer, { access: "public" });
 };
 
 // POST handler

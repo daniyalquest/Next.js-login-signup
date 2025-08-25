@@ -5,13 +5,12 @@ import { getDownloadUrl } from "@vercel/blob";
 
 const SECRET = process.env.SECRET;
 const FILE_NAME = "users.bin";
+const BLOB_URL = "https://4m0cie5i8sy7hf53.public.blob.vercel-storage.com/users.bin";
 
 // Read users from blob storage using getDownloadUrl
 const readUsers = async () => {
   try {
-    const { url } = await getDownloadUrl(FILE_NAME); // <-- CORRECT destructure
-    if (!url) return [];
-    const res = await fetch(url);
+    const res = await fetch(BLOB_URL);
     if (!res.ok) return [];
     const arrayBuffer = await res.arrayBuffer();
     return arrayBuffer.byteLength ? decode(new Uint8Array(arrayBuffer)) : [];
