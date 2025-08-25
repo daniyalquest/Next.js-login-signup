@@ -3,15 +3,17 @@ import { decode } from "@msgpack/msgpack";
 import jwt from "jsonwebtoken";
 
 const SECRET = process.env.SECRET;
+const BLOB_URL = "https://4m0cie5i8sy7hf53.public.blob.vercel-storage.com/users.bin";
 
+// Read users from blob storage using direct fetch
 const readUsers = async () => {
     try {
-        const { url } = await getDownloadUrl("users.bin");
-        const res = await fetch(url);
+        const res = await fetch(BLOB_URL);
         if (!res.ok) return [];
-        const buffer = Buffer.from(await res.arrayBuffer());
-        return buffer.length ? decode(buffer) : [];
-    } catch {
+        const arrayBuffer = await res.arrayBuffer();
+        return arrayBuffer.byteLength ? decode(new Uint8Array(arrayBuffer)) : [];
+    } catch (err) {
+        console.error("readUsers error:", err);
         return [];
     }
 };
