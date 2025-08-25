@@ -1,17 +1,20 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { decode } from "@msgpack/msgpack";
-import { put, get } from "@vercel/blob";
+import { put } from "@vercel/blob";
+import { getDownloadUrl } from "@vercel/blob";
 
 const SECRET = process.env.SECRET;
 const FILE_NAME = "users.bin";
 
-// Read users from blob storage
+// Read users from blob storage using getDownloadUrl
 const readUsers = async () => {
   try {
-    const response = await get(FILE_NAME);
-    if (!response.ok) return [];
-    const arrayBuffer = await response.arrayBuffer();
+    const { url } = await getDownloadUrl(FILE_NAME);
+    if (!url) return [];
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const arrayBuffer = await res.arrayBuffer();
     return arrayBuffer.byteLength ? decode(new Uint8Array(arrayBuffer)) : [];
   } catch {
     return [];

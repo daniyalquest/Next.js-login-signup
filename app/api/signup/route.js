@@ -1,13 +1,15 @@
-import { put, get } from "@vercel/blob";
+import { put, getDownloadUrl } from "@vercel/blob";
 import bcrypt from "bcryptjs";
 import { encode, decode } from "@msgpack/msgpack";
 
 // Helper to read users from blob storage
 const readUsers = async () => {
   try {
-    const response = await get("users.bin");
-    if (!response.ok) return [];
-    const buffer = Buffer.from(await response.arrayBuffer());
+    const { url } = await getDownloadUrl("users.bin");
+    if (!url) return [];
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const buffer = Buffer.from(await res.arrayBuffer());
     return buffer.length ? decode(buffer) : [];
   } catch {
     return [];

@@ -1,4 +1,4 @@
-import { get } from "@vercel/blob";
+import { getDownloadUrl } from "@vercel/blob";
 import { decode } from "@msgpack/msgpack";
 import jwt from "jsonwebtoken";
 
@@ -6,9 +6,10 @@ const SECRET = process.env.SECRET;
 
 const readUsers = async () => {
     try {
-        const response = await get("users.bin");
-        if (!response.ok) return [];
-        const buffer = Buffer.from(await response.arrayBuffer());
+        const { url } = await getDownloadUrl("users.bin");
+        const res = await fetch(url);
+        if (!res.ok) return [];
+        const buffer = Buffer.from(await res.arrayBuffer());
         return buffer.length ? decode(buffer) : [];
     } catch {
         return [];
